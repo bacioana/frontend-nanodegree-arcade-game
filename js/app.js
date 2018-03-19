@@ -17,7 +17,50 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-
+    function xCheck(x){
+        if (x<500){
+            return true;
+        } else {
+            return false;     
+        }       
+    }
+    switch(this.speed){
+        case 1:
+            if(xCheck(this.x)){
+                this.x+=2;
+            }else {
+                this.x=0
+            }
+            break;
+        case 2:
+            if(xCheck(this.x)){
+                this.x+=2;
+            }else {
+                this.x=0
+            }
+            break;
+        case 3:
+            if(xCheck(this.x)){
+                this.x+=3;
+            }else {
+                this.x=0
+            }
+            break;
+        case 4:
+            if(xCheck(this.x)){
+                this.x+=4;
+            }else {
+                this.x=0
+            }
+            break;
+        case 5:
+            if(xCheck(this.x)){
+                this.x+=5;
+            }else {
+                this.x=0
+            }
+            break;
+    }
     this.render(dt);
 };
 
@@ -32,12 +75,11 @@ Enemy.prototype.render = function() {
 var Player = function() {
     this.sprite= new Image(25, 25);
     this.sprite.src= 'images/char-boy.png';
-    this.initialLocation;
     this.x;
     this.y;
 }
 Player.prototype.update=function(dt){
-    this.render(dt);
+    this.render();
 }
 
 Player.prototype.render=function(){
@@ -79,23 +121,36 @@ Player.prototype.handleInput=function(key){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy();
-enemy1.x=0;
+const enemy1 = new Enemy();
+enemy1.x=5;
 enemy1.y=60;
-var enemy2 = new Enemy();
-var enemy3 = new Enemy();
-var enemy4 = new Enemy();
-var enemy5 = new Enemy();
-var allEnemies = [enemy1,enemy2,enemy3,enemy4,enemy5];
-var player = new Player();
-player.x=400;
+enemy1.speed=1;
+
+const enemy2 = new Enemy();
+enemy2.x=120;
+enemy2.y=140;
+enemy2.speed=3;
+
+const enemy3 = new Enemy();
+enemy3.speed=2;
+enemy3.x=0;
+enemy3.y=140;
+
+const enemy4 = new Enemy();
+enemy4.speed=4;
+enemy4.x=240;
+enemy4.y=60;
+
+const enemy5 = new Enemy();
+enemy5.speed=3;
+enemy5.x=0;
+enemy5.y=240;
+
+let allEnemies = [enemy1,enemy2,enemy3,enemy4,enemy5];
+
+const player = new Player();
+player.x=200;
 player.y=400;
-
-window.onload = function() {
-    player.render();
-    enemy1.render();
-};
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -106,6 +161,14 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+window.onload = function updatePlayers() {
+    player.update();
+    enemy1.update();
+    enemy2.update();
+    enemy3.update();
+    enemy4.update();
+    enemy5.update();
+};
