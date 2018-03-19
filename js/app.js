@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function() {
+const Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.speed;
@@ -24,6 +24,9 @@ Enemy.prototype.update = function(dt) {
             return false;     
         }       
     }
+
+//handles the update of vehicles at different speeds
+
     switch(this.speed){
         case 1:
             if(xCheck(this.x)){
@@ -61,8 +64,21 @@ Enemy.prototype.update = function(dt) {
             }
             break;
     }
+
+    collisionCheck();
     this.render(dt);
 };
+
+function collisionCheck (){
+    allEnemies.forEach(function(enemy) {
+        if((player.x>=(enemy.x-15) && player.x<=(enemy.x+25))&&(player.y===enemy.y)) {
+            player.x=200;
+            player.y=400;
+            player.update();
+        }
+    });
+    
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -72,14 +88,27 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function() {
+const Player = function() {
     this.sprite= new Image(25, 25);
     this.sprite.src= 'images/char-boy.png';
     this.x;
     this.y;
 }
+
 Player.prototype.update=function(dt){
     this.render();
+    win();
+}
+
+
+function win(){
+    if(player.y<40){
+        $('.checkMarkContainer').removeClass('hiddenItems');
+        $('.winPar').text(`Congratulations! You won.`);
+        $('.winParContainer').removeClass('hiddenItems');
+        const canvas=$('canvas');
+        canvas.addClass('hiddenItems');
+    }    
 }
 
 Player.prototype.render=function(){
@@ -113,47 +142,12 @@ Player.prototype.handleInput=function(key){
             break;
 
         default: return; // exit this handler for other keys
-    }
-
-    
+    }    
 }
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-const enemy1 = new Enemy();
-enemy1.x=5;
-enemy1.y=60;
-enemy1.speed=1;
-
-const enemy2 = new Enemy();
-enemy2.x=120;
-enemy2.y=140;
-enemy2.speed=3;
-
-const enemy3 = new Enemy();
-enemy3.speed=2;
-enemy3.x=0;
-enemy3.y=140;
-
-const enemy4 = new Enemy();
-enemy4.speed=4;
-enemy4.x=240;
-enemy4.y=60;
-
-const enemy5 = new Enemy();
-enemy5.speed=3;
-enemy5.x=0;
-enemy5.y=240;
-
-let allEnemies = [enemy1,enemy2,enemy3,enemy4,enemy5];
-
-const player = new Player();
-player.x=200;
-player.y=400;
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
+
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -164,11 +158,45 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+
+const enemy1 = new Enemy();
+enemy1.x=5;
+enemy1.y=40;
+enemy1.speed=1;
+
+const enemy2 = new Enemy();
+enemy2.x=120;
+enemy2.y=130;
+enemy2.speed=3;
+
+const enemy3 = new Enemy();
+enemy3.speed=2;
+enemy3.x=0;
+enemy3.y=130;
+
+const enemy4 = new Enemy();
+enemy4.speed=4;
+enemy4.x=220;
+enemy4.y=40;
+
+const enemy5 = new Enemy();
+enemy5.speed=3;
+enemy5.x=0;
+enemy5.y=220;
+
+let allEnemies = [enemy1,enemy2,enemy3,enemy4,enemy5];
+
+const player = new Player();
+player.x=200;
+player.y=400;
+
 window.onload = function updatePlayers() {
     player.update();
-    enemy1.update();
-    enemy2.update();
-    enemy3.update();
-    enemy4.update();
-    enemy5.update();
+    allEnemies.forEach(function(enemy) {
+        enemy.render();
+    });
+      
 };
