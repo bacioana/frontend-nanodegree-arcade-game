@@ -1,14 +1,15 @@
+'use strict';
 // Enemies our player must avoid
-const Enemy = function() {
+const Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.speed;
+    this.x=x;
+    this.y=y;
+    this.speed=speed;
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite= new Image(25, 25);
-    this.sprite.src= 'images/enemy-bug.png';
-    this.x;
-    this.y;
+    this.sprite = 'images/enemy-bug.png';
+    
 };
 
 // Update the enemy's position, required method for game
@@ -17,92 +18,43 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    function xCheck(x){
-        if (x<500){
-            return true;
-        } else {
-            return false;     
-        }       
+    
+    if(this.x<500){
+        this.x += this.speed*dt;
+    } else {
+        this.x=0;
     }
-
-//handles the update of vehicles at different speeds
-
-    switch(this.speed){
-        case 1:
-            if(xCheck(this.x)){
-                this.x+=2;
-            }else {
-                this.x=0
-            }
-            break;
-        case 2:
-            if(xCheck(this.x)){
-                this.x+=2;
-            }else {
-                this.x=0
-            }
-            break;
-        case 3:
-            if(xCheck(this.x)){
-                this.x+=3;
-            }else {
-                this.x=0
-            }
-            break;
-        case 4:
-            if(xCheck(this.x)){
-                this.x+=4;
-            }else {
-                this.x=0
-            }
-            break;
-        case 5:
-            if(xCheck(this.x)){
-                this.x+=5;
-            }else {
-                this.x=0
-            }
-            break;
-    }
-
-    collisionCheck();
-    this.render(dt);
+    this.collisionCheck();
 };
 
-function collisionCheck (){
-    allEnemies.forEach(function(enemy) {
-        if((player.x>=(enemy.x-15) && player.x<=(enemy.x+25))&&(player.y===enemy.y)) {
+Enemy.prototype.collisionCheck=function (){
+       if((player.x>=(this.x-15) && player.x<=(this.x+25))&&(player.y===this.y)) {
             player.x=200;
-            player.y=400;
-            player.update();
-        }
-    });
-    
+            player.y=400;            
+        }    
 }
+
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(this.sprite, this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-const Player = function() {
-    this.sprite= new Image(25, 25);
-    this.sprite.src= 'images/char-boy.png';
-    this.x;
-    this.y;
+const Player = function(x,y) {
+    this.sprite= 'images/char-boy.png';
+    this.x=x;
+    this.y=y;
 }
 
-Player.prototype.update=function(dt){
-    this.render();
-    win();
+Player.prototype.update=function(){
+    this.win();
 }
 
-
-function win(){
-    if(player.y<40){
+Player.prototype.win=function(){
+    if(this.y<40){
         $('.checkMarkContainer').removeClass('hiddenItems');
         $('.winPar').text(`Congratulations! You won.`);
         $('.winParContainer').removeClass('hiddenItems');
@@ -112,32 +64,29 @@ function win(){
 }
 
 Player.prototype.render=function(){
-    ctx.drawImage(this.sprite, this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
 Player.prototype.handleInput=function(key){
     switch(key){
         case 'left':
-            if(player.x>20){
-                player.x-=95;
-                player.update();
+            if(this.x>20){
+                this.x-=95;                             
             }
             break;
         case 'up':
-            if(player.y>20){
-                player.y-=90;
-                player.update();
+            if(this.y>20){
+                this.y-=90;                          
             }            
             break;
         case 'right':
-            if(player.x<400)
-                player.x+=95;
-                player.update();
+            if(this.x<400){
+                this.x+=95;                          
+            }
             break;
         case 'down':
-            if(player.y<400){
-                player.y+=90;
-                player.update();  
+            if(this.y<400){
+                this.y+=90;                         
             }            
             break;
 
@@ -162,41 +111,16 @@ document.addEventListener('keyup', function(e) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-const enemy1 = new Enemy();
-enemy1.x=5;
-enemy1.y=40;
-enemy1.speed=1;
+const enemy1 = new Enemy(5,40,85);
 
-const enemy2 = new Enemy();
-enemy2.x=120;
-enemy2.y=130;
-enemy2.speed=3;
+const enemy2 = new Enemy(120,130,80);
 
-const enemy3 = new Enemy();
-enemy3.speed=2;
-enemy3.x=0;
-enemy3.y=130;
+const enemy3 = new Enemy(0,130,150);
 
-const enemy4 = new Enemy();
-enemy4.speed=4;
-enemy4.x=220;
-enemy4.y=40;
+const enemy4 = new Enemy(220,40,100);
 
-const enemy5 = new Enemy();
-enemy5.speed=3;
-enemy5.x=0;
-enemy5.y=220;
+const enemy5 = new Enemy(0,220,90);
 
-let allEnemies = [enemy1,enemy2,enemy3,enemy4,enemy5];
+const allEnemies = [enemy1,enemy2,enemy3,enemy4,enemy5];
 
-const player = new Player();
-player.x=200;
-player.y=400;
-
-window.onload = function updatePlayers() {
-    player.update();
-    allEnemies.forEach(function(enemy) {
-        enemy.render();
-    });
-      
-};
+const player = new Player(200,400);
