@@ -32,7 +32,7 @@ Enemy.prototype.collisionCheck=function (){
             player.x=200;
             player.y=400;            
         }    
-}
+};
 
 
 // Draw the enemy on the screen, required method for game
@@ -47,11 +47,11 @@ const Player = function(x,y) {
     this.sprite= 'images/char-boy.png';
     this.x=x;
     this.y=y;
-}
+};
 
 Player.prototype.update=function(){
     this.win();
-}
+};
 
 Player.prototype.win=function(){
     if(this.y<40){
@@ -61,11 +61,11 @@ Player.prototype.win=function(){
         const canvas=$('canvas');
         canvas.addClass('hiddenItems');
     }    
-}
+};
 
 Player.prototype.render=function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 Player.prototype.handleInput=function(key){
     switch(key){
@@ -92,7 +92,7 @@ Player.prototype.handleInput=function(key){
 
         default: return; // exit this handler for other keys
     }    
-}
+};
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
