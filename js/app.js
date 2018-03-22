@@ -80,7 +80,7 @@ Player.prototype.handleInput=function(key){
             }            
             break;
         case 'right':
-            if(this.x<400){
+            if(this.x<390){
                 this.x+=95;                          
             }
             break;
